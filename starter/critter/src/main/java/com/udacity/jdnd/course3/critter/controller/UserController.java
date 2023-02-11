@@ -7,7 +7,9 @@ import com.udacity.jdnd.course3.critter.dto.CustomerDTO;
 import com.udacity.jdnd.course3.critter.dto.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.mapper.CustomerDTOMapper;
+import com.udacity.jdnd.course3.critter.mapper.EmployeeDTOMapper;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,12 @@ public class UserController {
   @Autowired
   private PetService petService;
 
+  @Autowired
+  private EmployeeService employeeService;
+
+  @Autowired
+  private EmployeeDTOMapper employeeDTOMapper;
+
   @PostMapping("/customer")
   public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
     try {
@@ -63,29 +71,42 @@ public class UserController {
       return customerDTOMapper.customerToCustomerDTO(
           customerService.getPetOwner(petService.getPetBy(petId)));
     } catch (Exception e) {
-      throw new ResponseStatusException(NOT_FOUND, "No Pet found", e);
+      throw new ResponseStatusException(NOT_FOUND, "Pet (id:" + petId + ") not found.", e);
     }
   }
 
   @PostMapping("/employee")
   public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-    throw new UnsupportedOperationException();
+    return employeeDTOMapper.employeeToEmployeeDTO(
+        employeeService.saveEmployee(employeeDTOMapper.employeeDTOToEmployee(employeeDTO)));
   }
 
-  @PostMapping("/employee/{employeeId}")
+  @GetMapping("/employee/{employeeId}")
   public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-    throw new UnsupportedOperationException();
+    try {
+      return employeeDTOMapper.employeeToEmployeeDTO(employeeService.getEmployeeBy(employeeId));
+    } catch (Exception e) {
+      throw new ResponseStatusException(NOT_FOUND, "Employee (id:" + employeeId + ") not found.", e);
+    }
   }
 
   @PutMapping("/employee/{employeeId}")
   public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable,
       @PathVariable long employeeId) {
-    throw new UnsupportedOperationException();
+    try {
+      employeeService.setAvailabilityOfEmployee(daysAvailable, employeeId);
+    } catch (Exception e) {
+      throw new ResponseStatusException(NOT_FOUND, "Employee (id:" + employeeId + ") not found.",
+          e);
+    }
   }
 
   @GetMapping("/employee/availability")
   public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-    throw new UnsupportedOperationException();
+    return employeeService.getAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills())
+        .stream()
+        .map(employeeDTOMapper::employeeToEmployeeDTO)
+        .collect(Collectors.toList());
   }
 
 }
