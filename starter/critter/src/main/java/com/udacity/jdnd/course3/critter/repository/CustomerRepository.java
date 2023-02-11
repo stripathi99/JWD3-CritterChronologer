@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-  Customer findCustomerByPets(Pet pet);
+  Customer findByPets(Pet pet);
 }

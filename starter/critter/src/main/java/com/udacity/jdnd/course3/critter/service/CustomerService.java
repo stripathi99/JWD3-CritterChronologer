@@ -28,6 +28,6 @@ public class CustomerService {
   }
 
   public Customer getPetOwner(Pet pet) {
-    return customerRepository.findCustomerByPets(pet);
+    return customerRepository.findByPets(pet);
   }
 }
