@@ -40,7 +40,7 @@ public class PetController {
         try {
             return petDTOMapper.petToPetDTO(petService.getPetBy(petId));
         } catch (Exception e) {
-            throw new ResponseStatusException(NOT_FOUND, "No pet found with id: " + petId, e);
+            throw new ResponseStatusException(NOT_FOUND, "Pet (id:" + petId + ") not found.", e);
         }
     }
 
