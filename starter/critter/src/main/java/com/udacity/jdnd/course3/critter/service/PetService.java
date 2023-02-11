@@ -1,5 +1,7 @@
 package com.udacity.jdnd.course3.critter.service;
 
+import static java.util.Collections.singletonList;
+
 import com.udacity.jdnd.course3.critter.model.Pet;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import java.util.List;
@@ -18,7 +20,9 @@ public class PetService {
   private PetRepository petRepository;
 
   public Pet save(Pet pet) {
-    return petRepository.save(pet);
+    Pet savedPet = petRepository.save(pet);
+    savedPet.getOwner().setPets(singletonList(savedPet));
+    return savedPet;
   }
 
   public List<Pet> list() {

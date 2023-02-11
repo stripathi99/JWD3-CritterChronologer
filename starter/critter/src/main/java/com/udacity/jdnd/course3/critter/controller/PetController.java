@@ -1,13 +1,12 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.udacity.jdnd.course3.critter.dto.PetDTO;
 import com.udacity.jdnd.course3.critter.mapper.PetDTOMapper;
-import com.udacity.jdnd.course3.critter.model.Pet;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,17 +45,19 @@ public class PetController {
 
     @GetMapping
     public List<PetDTO> getPets() {
-        return petService.list()
+        return petService
+            .list()
             .stream()
             .map(petDTOMapper::petToPetDTO)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        return petService.getAllOwnerPets(ownerId)
+        return petService
+            .getAllOwnerPets(ownerId)
             .stream()
             .map(petDTOMapper::petToPetDTO)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 }

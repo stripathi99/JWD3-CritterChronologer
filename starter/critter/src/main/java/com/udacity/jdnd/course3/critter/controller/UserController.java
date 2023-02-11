@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -11,7 +12,6 @@ import com.udacity.jdnd.course3.critter.mapper.EmployeeDTOMapper;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.service.PetService;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,10 +58,11 @@ public class UserController {
 
   @GetMapping("/customer")
   public List<CustomerDTO> getAllCustomers() {
-    return customerService.list()
+    return customerService
+        .list()
         .stream()
         .map(customerDTOMapper::customerToCustomerDTO)
-        .collect(Collectors.toList());
+        .collect(toList());
     //throw new UnsupportedOperationException();
   }
 
@@ -103,10 +104,11 @@ public class UserController {
 
   @GetMapping("/employee/availability")
   public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-    return employeeService.getAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills())
+    return employeeService
+        .getAvailableEmployees(employeeDTO.getDate(), employeeDTO.getSkills())
         .stream()
         .map(employeeDTOMapper::employeeToEmployeeDTO)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
 }
