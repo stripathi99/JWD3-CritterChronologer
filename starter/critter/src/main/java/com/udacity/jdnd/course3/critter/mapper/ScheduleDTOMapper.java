@@ -8,17 +8,43 @@ import com.udacity.jdnd.course3.critter.dto.ScheduleDTO;
 import com.udacity.jdnd.course3.critter.model.Employee;
 import com.udacity.jdnd.course3.critter.model.Pet;
 import com.udacity.jdnd.course3.critter.model.Schedule;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScheduleDTOMapper {
+
+  @Autowired
+  private EmployeeService employeeService;
+
+  @Autowired
+  private PetService petService;
 
   public Schedule scheduleDTOToSchedule(ScheduleDTO scheduleDTO) {
     Schedule schedule = new Schedule();
     copyProperties(scheduleDTO, schedule);
 
     // employeeId -> employee
+    if (nonNull(scheduleDTO.getEmployeeIds())) {
+      schedule.setEmployees(
+          scheduleDTO.getEmployeeIds()
+              .stream()
+              .map(employeeService::getEmployeeBy)
+              .collect(toList())
+      );
+    }
+
     // petID -> pet
+    if (nonNull(scheduleDTO.getPetIds())) {
+      schedule.setPets(
+          scheduleDTO.getPetIds()
+              .stream()
+              .map(petService::getPetBy)
+              .collect(toList())
+      );
+    }
 
     return schedule;
   }
