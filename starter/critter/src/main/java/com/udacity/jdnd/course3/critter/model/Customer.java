@@ -19,6 +19,10 @@ public class Customer extends User {
     this.pets = pets;
   }
 
+  public Customer() {
+
+  }
+
   public String getPhoneNumber() {
     return phoneNumber;
   }

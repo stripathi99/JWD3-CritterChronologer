@@ -41,6 +41,10 @@ public class Schedule {
     this.activities = activities;
   }
 
+  public Schedule() {
+
+  }
+
   public Long getId() {
     return id;
   }
