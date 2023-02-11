@@ -3,6 +3,11 @@ package com.udacity.jdnd.course3.critter.controller;
 import com.udacity.jdnd.course3.critter.dto.CustomerDTO;
 import com.udacity.jdnd.course3.critter.dto.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
+import com.udacity.jdnd.course3.critter.mapper.CustomerDTOMapper;
+import com.udacity.jdnd.course3.critter.model.Customer;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -19,14 +24,26 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    CustomerDTOMapper customerDTOMapper;
+
+    @Autowired
+    CustomerService customerService;
+
     @PostMapping("/customer")
-    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
+        return customerDTOMapper.customerToCustomerDTO(
+            customerService.saveCustomer(customerDTOMapper.customerDTOToCustomer(customerDTO)));
+        //throw new UnsupportedOperationException();
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        return customerService.list()
+            .stream()
+            .map(customerDTOMapper::customerToCustomerDTO)
+            .collect(Collectors.toList());
+        //throw new UnsupportedOperationException();
     }
 
     @GetMapping("/customer/pet/{petId}")
